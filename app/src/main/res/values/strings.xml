@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">BusinessCard</string>
+    <string name="github_handle">\@samwhite2909</string>
+    <string name="job_title">Android Developer</string>
+    <string name="name">Sam White</string>
+    <string name="profile_picture_description">Profile image</string>
+    <string name="hide_portfolio">Hide Portfolio</string>
+    <string name="show_portfolio">Show Portfolio</string>
 </resources>

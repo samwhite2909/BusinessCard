@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,33 +72,40 @@ fun CreateBusinessCard() {
                 Divider()
                 CreateInfo()
                 Button(onClick = {
-
                     buttonClickedState.value = !buttonClickedState.value
-
                 }) {
-                    if (buttonClickedState.value) {
-                        Text(
-                            text = "Hide Portfolio",
-                            style = MaterialTheme.typography.button
-                        )
-                    } else {
-                        Text(
-                            text = "Show Portfolio",
-                            style = MaterialTheme.typography.button
-                        )
-                    }
+                    CheckButtonText(buttonClickedState)
                 }
-                if (buttonClickedState.value) {
-                    Content()
-                } else {
-                    Box {}
-                }
+                CheckPortfolio(buttonClickedState)
             }
         }
     }
 }
 
-@Preview
+@Composable
+private fun CheckPortfolio(buttonClickedState: MutableState<Boolean>) {
+    if (buttonClickedState.value) {
+        Content()
+    } else {
+        Box {}
+    }
+}
+
+@Composable
+private fun CheckButtonText(buttonClickedState: MutableState<Boolean>) {
+    if (buttonClickedState.value) {
+        Text(
+            text = stringResource(R.string.hide_portfolio),
+            style = MaterialTheme.typography.button,
+            )
+    } else {
+        Text(
+            text = stringResource(R.string.show_portfolio),
+            style = MaterialTheme.typography.button,
+        )
+    }
+}
+
 @Composable
 fun Content() {
     Box(
@@ -113,16 +122,15 @@ fun Content() {
             shape = RoundedCornerShape(corner = CornerSize(6.dp)),
             border = BorderStroke(width = 2.dp, color = Color.LightGray)
         ) {
-
             Portfolio(
-                data = listOf("Project 1", "Project 2", "Project 3")
+                data = createProjects()
             )
         }
     }
 }
 
 @Composable
-fun Portfolio(data: List<String>) {
+fun Portfolio(data: List<Project>) {
     LazyColumn {
         items(data) { item ->
             Card(
@@ -145,8 +153,8 @@ fun Portfolio(data: List<String>) {
                             .padding(7.dp)
                             .align(alignment = Alignment.CenterVertically)
                     ) {
-                        Text(text = item, fontWeight = FontWeight.Bold)
-                        Text(text = "Project Description", style = MaterialTheme.typography.body2)
+                        Text(text = item.title, fontWeight = FontWeight.Bold)
+                        Text(text = item.description, style = MaterialTheme.typography.body2)
                     }
                 }
             }
@@ -158,19 +166,21 @@ fun Portfolio(data: List<String>) {
 private fun CreateInfo() {
     Column(modifier = Modifier.padding(5.dp)) {
         Text(
-            text = "Sam White",
+            text = stringResource(R.string.name),
             style = MaterialTheme.typography.h4,
-            color = MaterialTheme.colors.primaryVariant
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
-
         Text(
-            text = "Android Developer",
-            modifier = Modifier.padding(3.dp)
+            text = stringResource(R.string.job_title),
+            modifier = Modifier
+                .padding(3.dp)
+                .align(alignment = Alignment.CenterHorizontally)
         )
-
         Text(
-            text = "@samwhite2909",
-            modifier = Modifier.padding(3.dp),
+            text = stringResource(R.string.github_handle),
+            modifier = Modifier
+                .padding(3.dp)
+                .align(alignment = Alignment.CenterHorizontally),
             style = MaterialTheme.typography.subtitle1
         )
     }
@@ -187,21 +197,35 @@ private fun CreateProfileImage(modifier: Modifier = Modifier) {
         elevation = 4.dp,
         color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.profile_picture),
-            contentDescription = "Profile image",
+            contentDescription = stringResource(R.string.profile_picture_description),
             modifier = modifier.size(135.dp),
             contentScale = ContentScale.Crop
         )
-
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     BusinessCardTheme {
         CreateBusinessCard()
     }
+}
+
+fun createProjects(): List<Project> {
+    val project1 = Project(
+        "ImageViewMVVMApp",
+        "Allows the user to search the internet for images based on a search term."
+    )
+    val project2 = Project(
+        "PerfectFit",
+        "A fitness app developed as part of my third year dissertation project."
+    )
+    val project3 = Project(
+        "JavaGPSDemo",
+        "A demo of accessing and using GPS data using Java."
+    )
+    return listOf(project1, project2, project3)
 }
