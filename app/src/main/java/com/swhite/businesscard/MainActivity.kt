@@ -45,11 +45,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//Creates the main layout for the activity, showing the full business card.
 @Composable
 fun CreateBusinessCard() {
+    //Holds the state of whether the projects are showing.
     val buttonClickedState = remember {
         mutableStateOf(false)
     }
+    //Creates the background/base for the card.
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,20 +71,24 @@ fun CreateBusinessCard() {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                //Creates the contents of the business card.
                 CreateProfileImage()
                 Divider()
                 CreateInfo()
                 Button(onClick = {
                     buttonClickedState.value = !buttonClickedState.value
                 }) {
+                    //Shows correct text on button depending on state.
                     CheckButtonText(buttonClickedState)
                 }
+                //Shows or hides the portfolio depending on state.
                 CheckPortfolio(buttonClickedState)
             }
         }
     }
 }
 
+//Shows the portfolio or hides it, depending on state.
 @Composable
 private fun CheckPortfolio(buttonClickedState: MutableState<Boolean>) {
     if (buttonClickedState.value) {
@@ -91,6 +98,7 @@ private fun CheckPortfolio(buttonClickedState: MutableState<Boolean>) {
     }
 }
 
+//Shows the correct text on the button, depending on state.
 @Composable
 private fun CheckButtonText(buttonClickedState: MutableState<Boolean>) {
     if (buttonClickedState.value) {
@@ -106,8 +114,10 @@ private fun CheckButtonText(buttonClickedState: MutableState<Boolean>) {
     }
 }
 
+//Creates the portfolio or view of projects.
 @Composable
 fun Content() {
+    //Creates the base for the portfolio.
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -122,6 +132,7 @@ fun Content() {
             shape = RoundedCornerShape(corner = CornerSize(6.dp)),
             border = BorderStroke(width = 2.dp, color = Color.LightGray)
         ) {
+            //Adds the projects into the portfolio.
             Portfolio(
                 data = createProjects()
             )
@@ -129,6 +140,7 @@ fun Content() {
     }
 }
 
+//Takes in a list of projects and displays them individually in the equivalent of a RecyclerView.
 @Composable
 fun Portfolio(data: List<Project>) {
     LazyColumn {
@@ -162,6 +174,7 @@ fun Portfolio(data: List<Project>) {
     }
 }
 
+//Creates the details displayed below the profile picture.
 @Composable
 private fun CreateInfo() {
     Column(modifier = Modifier.padding(5.dp)) {
@@ -186,6 +199,7 @@ private fun CreateInfo() {
     }
 }
 
+//Creates the profile picture.
 @Composable
 private fun CreateProfileImage(modifier: Modifier = Modifier) {
     Surface(
@@ -206,6 +220,7 @@ private fun CreateProfileImage(modifier: Modifier = Modifier) {
     }
 }
 
+//Allows for a full preview of the business card.
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
@@ -214,6 +229,8 @@ fun DefaultPreview() {
     }
 }
 
+//Creates the projects to be displayed within the portfolio.
+//TODO: Externalise the strings and allow for custom pictures for each project.
 fun createProjects(): List<Project> {
     val project1 = Project(
         "ImageViewMVVMApp",
